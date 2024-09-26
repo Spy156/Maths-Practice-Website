@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from "framer-motion";
 import { Card, CardBody, CardFooter, Button } from "@nextui-org/react";
 import Bg from '../assets/mathsbg.jpeg';
 
@@ -16,17 +17,22 @@ const topics = [
 const Home: React.FC = () => {
 
   const divStyle: React.CSSProperties = {
-    backgroundImage: `url(${Bg})`, // Adjust the path accordingly
-    backgroundSize: 'cover', // Scale the image to cover the div
-    backgroundPosition: 'center', // Center the image
-    height: '400px', // Set a height for the div
-    width: '100%', // Full width of the parent
-    position: 'relative', // Set position to relative to allow absolute positioning of overlay
-    overflow: 'hidden' // Prevents any overflow
+    backgroundImage: `url(${Bg})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    height: '400px',
+    width: '100%',
+    position: 'relative',
+    overflow: 'hidden'
   };
 
   return (
-    <div className=" mx-auto gap-20 max-h-full max-w-full">
+    <motion.div
+      initial={{ y: 50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="mx-auto gap-20 max-h-full max-w-full"
+    >
       <div className="text-center mb-6 p-8" style={divStyle}>
         <h1 className="text-4xl font-bold mb-4 text-white text-left">Master Maths with Fun & Ease!</h1>
         <p className="text-xl mb-6 text-white text-left">
@@ -61,7 +67,7 @@ const Home: React.FC = () => {
       <footer className="mt-8 text-center">
         <p className="text-sm">© 2024 Maths</p>
       </footer>
-    </div>
+    </motion.div >
   );
 };
 
