@@ -9,12 +9,12 @@ const Progress = lazy(() => import('./pages/Progress'));
 const UserProfile = lazy(() => import('./pages/Profile'));
 const NotFound = lazy(() => import('./pages/Error'));
 
-//classe
-const ClassOne = lazy(() => import('./pages/Practice/Class/ClassOne'));
-const ClassTwo = lazy(() => import('./pages/Practice/Class/ClassTwo'));
-const ClassThree = lazy(() => import('./pages/Practice/Class/ClassThree'));
-const ClassFourth = lazy(() => import('./pages/Practice/Class/ClassFour'));
-const ClassFive = lazy(() => import('./pages/Practice/Class/ClassFive'));
+//classes
+const ClassOne = lazy(() => import('./pages/Practice/Class/ClassOne/ClassOne'));
+const ClassTwo = lazy(() => import('./pages/Practice/Class/ClassTwo/ClassTwo'));
+const ClassThree = lazy(() => import('./pages/Practice/Class/ClassThree/ClassThree'));
+const ClassFourth = lazy(() => import('./pages/Practice/Class/ClassFour/ClassFour'));
+const ClassFive = lazy(() => import('./pages/Practice/Class/ClassFive/ClassFive'));
 
 //topics
 const Addition = lazy(() => import('./pages/Practice/Topic/Addition'));
@@ -25,6 +25,14 @@ const SquareRoots = lazy(() => import('./pages/Practice/Topic/SquareRoots'));
 const CubeRoots = lazy(() => import('./pages/Practice/Topic/CubeRoots'));
 const Squaring = lazy(() => import('./pages/Practice/Topic/Squaring'));
 const Cubing = lazy(() => import('./pages/Practice/Topic/Cubing'));
+
+
+//ClassOne
+const CountingAndNumbers = lazy(() => import('./pages/Practice/Class/ClassOne/CountingAndNumbers'));
+const BasicAddition = lazy(() => import('./pages/Practice/Class/ClassOne/BasicAddition'));
+const BasicSubtraction = lazy(() => import('./pages/Practice/Class/ClassOne/BasicSubtraction'));
+const ShapesAndPatterns = lazy(() => import('./pages/Practice/Class/ClassOne/ShapesAndPatterns'));
+const ComparingNumbers = lazy(() => import('./pages/Practice/Class/ClassOne/ComparingNumbers'));
 
 function Layout() {
   return (
@@ -38,11 +46,13 @@ function Layout() {
             <Route path="/practice" element={<Practice />} />
             <Route path="/user/:id" element={<UserProfile />} />
             <Route path="*" element={<NotFound />} />
+
             <Route path="/Class/ClassOne" element={<ClassOne />} />
             <Route path="/Class/ClassTwo" element={<ClassTwo />} />
             <Route path="/Class/ClassThree" element={<ClassThree />} />
             <Route path="/Class/ClassFour" element={<ClassFourth />} />
             <Route path="/Class/ClassFive" element={<ClassFive />} />
+
             <Route path="/Topic/Addition" element={<Addition />} />
             <Route path="/Topic/Subtraction" element={<Subtraction />} />
             <Route path="/Topic/Multiplication" element={<Multiplication />} />
@@ -51,6 +61,13 @@ function Layout() {
             <Route path="/Topic/CubeRoots" element={<CubeRoots />} />
             <Route path="/Topic/Squaring" element={<Squaring />} />
             <Route path="/Topic/Cubing" element={<Cubing />} />
+
+            <Route path="/Class/ClassOne/CountingAndNumbers" element={<CountingAndNumbers />} />
+            <Route path="/Class/ClassOne/BasicAddition" element={<BasicAddition />} />
+            <Route path="/Class/ClassOne/BasicSubtraction" element={<BasicSubtraction />} />
+            <Route path="/Class/ClassOne/ShapesAndPatterns" element={<ShapesAndPatterns />} />
+            <Route path="/Class/ClassOne/ComparingNumbers" element={<ComparingNumbers />} />
+            
           </Routes>
         </Suspense>
       </div>
