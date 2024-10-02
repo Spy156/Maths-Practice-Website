@@ -165,7 +165,7 @@ const CountingNumbersExercise: React.FC = () => {
                 ))}
             </motion.div>
 
-            <div className="w-1/4">
+            <div className="w-1/4 mt-12">
                 <Card className="sticky top-4">
                     <CardBody>
                         <h3 className="text-lg font-semibold mb-4">Exercise Progress</h3>
@@ -210,7 +210,7 @@ const CountingNumbersExercise: React.FC = () => {
                             </div>
                         </div>
                         <p className="text-center mb-4">
-                            Great job! You've completed the Counting & Numbers exercise.
+                        Great job! You've completed the Counting & Numbers exercise.
                         </p>
                         <p>Time required: {formatTime(timeElapsed)}</p>
                         <p>Questions answered: {Object.keys(answers).length}/{questions.length}</p>

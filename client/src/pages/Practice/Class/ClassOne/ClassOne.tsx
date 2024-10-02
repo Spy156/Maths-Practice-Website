@@ -13,7 +13,8 @@ const topics = [
     details: [
       "Understanding numbers up to 10",
       "Learning number sequences and basic counting"
-    ]
+    ],
+    path: "/Class/ClassOne/CountingAndNumbers"
   },
   {
     icon: <Plus className="w-6 h-6" />,
@@ -23,7 +24,8 @@ const topics = [
     details: [
       "Simple addition problems with single digit",
       "Using objects or visual aids to add numbers"
-    ]
+    ],
+    path: "/Class/ClassOne/BasicAddition"
   },
   {
     icon: <Minus className="w-6 h-6" />,
@@ -33,7 +35,8 @@ const topics = [
     details: [
       "Introduction to subtraction using objects",
       "Single-digit subtraction exercises"
-    ]
+    ],
+    path: "/Class/ClassOne/BasicSubtraction"
   },
   {
     icon: <LayoutDashboardIcon className="w-6 h-6" />,
@@ -43,7 +46,8 @@ const topics = [
     details: [
       "Identifying basic shapes (circle, square, triangle)",
       "Recognizing patterns and sequences"
-    ]
+    ],
+    path: "/Class/ClassOne/ShapesAndPatterns"
   },
   {
     icon: <ArrowLeftRight className="w-6 h-6" />,
@@ -53,7 +57,8 @@ const topics = [
     details: [
       "Greater than, less than, and equal to concepts",
       "Simple comparison problems"
-    ]
+    ],
+    path: "/Class/ClassOne/ComparingNumbers"
   }
 ];
 
@@ -74,7 +79,8 @@ const ClassOne: React.FC = () => {
           key={index} 
           className="mb-4 w-full" 
           isPressable 
-          onPress={() => navigate(`/Class/ClassOne/CountingAndNumbers`)}
+          isHoverable
+          onPress={() => navigate(topic.path)} // Dynamically navigate based on the topic's path
         >
           <CardBody>
             <div className="flex items-center mb-2">
