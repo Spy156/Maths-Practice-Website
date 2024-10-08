@@ -12,7 +12,8 @@ const topics = [
     details: [
       "Adding two-digit numbers",
       "Introduction to carrying over in addition"
-    ]
+    ],
+    path: "/Class/ClassTwo/AdvancedAddition"
   },
   {
     icon: <MinusSquare className="w-6 h-6" />,
@@ -22,7 +23,8 @@ const topics = [
     details: [
       "Subtracting two-digit numbers",
       "Introduction to borrowing in subtraction"
-    ]
+    ],
+    path: "/Class/ClassTwo/AdvancedSubtraction"
   },
   {
     icon: <Grid className="w-6 h-6" />,
@@ -32,7 +34,8 @@ const topics = [
     details: [
       "Understanding tens and ones",
       "Breaking down numbers by place value"
-    ]
+    ],
+    path: "/Class/ClassTwo/PlaceValue"
   },
   {
     icon: <Clock className="w-6 h-6" />,
@@ -42,7 +45,8 @@ const topics = [
     details: [
       "Reading clocks (hours and half-hours)",
       "Basic understanding of time (AM/PM)"
-    ]
+    ],
+    path: "/Class/ClassTwo/IntroductionToTime"
   },
   {
     icon: <Coins className="w-6 h-6" />,
@@ -52,7 +56,8 @@ const topics = [
     details: [
       "Identifying different coins and notes",
       "Simple addition and subtraction with money"
-    ]
+    ],
+    path: "/Class/ClassTwo/MoneyAndCountingCoins"
   }
 ];
 
@@ -99,7 +104,7 @@ const ClassIIMathsProgress: React.FC = () => {
       ))}
       
       <footer className="mt-8 text-center text-sm text-gray-500">
-        © 2024 Maths
+        &copy; 2024 Maths
       </footer>
     </motion.div>
   );

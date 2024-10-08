@@ -8,16 +8,16 @@ import {
     Button,
     Card,
     CardBody,
-    Progress
+    Progress,
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import confetti from 'canvas-confetti';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 import Q2Image1 from "../../../../assets/Maths Images/Basic Addition 2a.png";
 import Q2Image2 from "../../../../assets/Maths Images/Basic Addition 2b.png";
-import Q4Image1 from "../../../../assets/Maths Images/Basic Addition 4a.png"
-import Q4Image2 from "../../../../assets/Maths Images/Basic Addition 4b.png"
-import Q5Image1 from "../../../../assets/Maths Images/Basic Addition 5a.png";
-import Q5Image2 from "../../../../assets/Maths Images/Basic Addition 5b.png";
+import Q4Image1 from "../../../../assets/Maths Images/Basic Addition 4a.png";
+import Q4Image2 from "../../../../assets/Maths Images/Basic Addition 4b.png";
 
 interface Question {
     id: number;
@@ -76,8 +76,14 @@ const BasicAddition: React.FC = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isTimerRunning, setIsTimerRunning] = useState(true);
     const [showSolutions, setShowSolutions] = useState(false);
+    const [progress, setProgress] = useState<number>(0);
 
     useEffect(() => {
+        const storedProgress = localStorage.getItem('basicAdditionProgress');
+        if (storedProgress) {
+            setProgress(parseInt(storedProgress, 10));
+        }
+
         let timer: number;
         if (isTimerRunning) {
             timer = window.setInterval(() => {
@@ -104,6 +110,16 @@ const BasicAddition: React.FC = () => {
         setScore(totalScore);
         setIsSubmitted(true);
         setShowSolutions(true);
+
+        const newProgress = Math.round((totalScore / questions.length) * 100);
+        setProgress(newProgress);
+
+        localStorage.setItem('basicAdditionProgress', newProgress.toString());
+
+        const classOneTopics = JSON.parse(localStorage.getItem('classOneTopics') || '{}');
+        classOneTopics['Basic Addition'] = newProgress;
+        localStorage.setItem('classOneTopics', JSON.stringify(classOneTopics));
+
         confetti({
             particleCount: 100,
             spread: 70,
@@ -115,7 +131,7 @@ const BasicAddition: React.FC = () => {
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}:${(secs % 60).toString().padStart(2, '0')}`;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
 
     return (
@@ -139,8 +155,8 @@ const BasicAddition: React.FC = () => {
                                     <Button
                                         key={index}
                                         color={answers[question.id] === option ? "primary" : "default"}
-                                        onClick={() => handleAnswerChange(question.id, option)}
-                                        className="w-full rounded-md"
+                                        onPress={() => handleAnswerChange(question.id, option)}
+                                        className="w-full"
                                     >
                                         {option}
                                     </Button>
@@ -173,18 +189,19 @@ const BasicAddition: React.FC = () => {
                         <h3 className="text-lg font-semibold mb-4">Exercise Progress</h3>
                         <p>Time Elapsed: {formatTime(timeElapsed)}</p>
                         <p>Questions Answered: {Object.keys(answers).length}/{questions.length}</p>
+                        <p className="mt-2">Overall Progress: {progress}%</p>
+                        <Progress color="primary" value={progress} className="mt-2" />
                         {isSubmitted && (
                             <>
-                                <p>Correct Answers: {score}</p>
+                                <p className="mt-2">Correct Answers: {score}</p>
                                 <p>Incorrect Answers: {questions.length - score}</p>
-                                <p>Overall Score: {score}</p>
                             </>
                         )}
                         <Button
                             color="success"
                             className="mt-4 w-full"
-                            onClick={calculateScore}
-                            disabled={isSubmitted}
+                            onPress={calculateScore}
+                            isDisabled={isSubmitted}
                         >
                             Submit All
                         </Button>
@@ -192,8 +209,8 @@ const BasicAddition: React.FC = () => {
                 </Card>
             </div>
 
-            <Modal 
-                isOpen={isModalOpen} 
+            <Modal
+                isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 size="lg"
             >
@@ -201,18 +218,17 @@ const BasicAddition: React.FC = () => {
                     <ModalHeader className="flex flex-col gap-1">Your Score</ModalHeader>
                     <ModalBody>
                         <div className="flex justify-center items-center mb-4">
-                            <div className="relative w-48 h-48">
-                                <Progress
-                                    size="lg"
+                            <div className="w-48 h-48">
+                                <CircularProgressbar
                                     value={(score / questions.length) * 100}
-                                    color="success"
-                                    showValueLabel={true}
-                                    className="w-full h-full"
-                                    aria-label="Score progress"
+                                    text={`${score}/${questions.length}`}
+                                    styles={buildStyles({
+                                        textSize: '16px',
+                                        pathColor: `rgba(62, 152, 199, ${score / questions.length})`,
+                                        textColor: '#3e98c7',
+                                        trailColor: '#d6d6d6',
+                                    })}
                                 />
-                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                    <span className="text-3xl font-bold">{score} / {questions.length}</span>
-                                </div>
                             </div>
                         </div>
                         <p className="text-center mb-4">
@@ -222,7 +238,7 @@ const BasicAddition: React.FC = () => {
                         <p>Questions answered: {Object.keys(answers).length}/{questions.length}</p>
                         <p>Correct Answers: {score}</p>
                         <p>Incorrect Answers: {questions.length - score}</p>
-                        <p>Overall Score: {score}</p>
+                        <p>Overall Progress: {progress}%</p>
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" onPress={() => setIsModalOpen(false)}>

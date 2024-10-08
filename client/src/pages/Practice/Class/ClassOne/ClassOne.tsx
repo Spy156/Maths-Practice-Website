@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { Card, CardBody, Progress, Chip } from "@nextui-org/react";
-import { BookOpen, Plus, Minus, LayoutDashboardIcon, ArrowLeftRight } from "lucide-react";
+import { BookOpen, Plus, Minus, Layout, ArrowLeftRight } from "lucide-react";
 
-const topics = [
+interface Topic {
+  icon: React.ReactNode;
+  title: string;
+  progress: number;
+  completed: boolean;
+  details: string[];
+  path: string;
+}
+
+const initialTopics: Topic[] = [
   { 
     icon: <BookOpen className="w-6 h-6" />,
     title: "Counting & Numbers",
-    progress: 10,
-    completed: true,
+    progress: 0,
+    completed: false,
     details: [
       "Understanding numbers up to 10",
       "Learning number sequences and basic counting"
@@ -19,8 +28,8 @@ const topics = [
   {
     icon: <Plus className="w-6 h-6" />,
     title: "Basic Addition",
-    progress: 10,
-    completed: true,
+    progress: 0,
+    completed: false,
     details: [
       "Simple addition problems with single digit",
       "Using objects or visual aids to add numbers"
@@ -30,8 +39,8 @@ const topics = [
   {
     icon: <Minus className="w-6 h-6" />,
     title: "Basic Subtraction",
-    progress: 10,
-    completed: true,
+    progress: 0,
+    completed: false,
     details: [
       "Introduction to subtraction using objects",
       "Single-digit subtraction exercises"
@@ -39,10 +48,10 @@ const topics = [
     path: "/Class/ClassOne/BasicSubtraction"
   },
   {
-    icon: <LayoutDashboardIcon className="w-6 h-6" />,
+    icon: <Layout className="w-6 h-6" />,
     title: "Shapes & Patterns",
-    progress: 10,
-    completed: true,
+    progress: 0,
+    completed: false,
     details: [
       "Identifying basic shapes (circle, square, triangle)",
       "Recognizing patterns and sequences"
@@ -64,6 +73,18 @@ const topics = [
 
 const ClassOne: React.FC = () => {
   const navigate = useNavigate();
+  const [topics, setTopics] = useState<Topic[]>(initialTopics);
+
+  useEffect(() => {
+    const storedTopics = JSON.parse(localStorage.getItem('classOneTopics') || '{}');
+    const updatedTopics = initialTopics.map(topic => ({
+      ...topic,
+      progress: storedTopics[topic.title] || topic.progress,
+      completed: (storedTopics[topic.title] || 0) === 100
+    }));
+    setTopics(updatedTopics);
+  }, []);
+
   return (
     <motion.div
       initial={{ y: 50, opacity: 0 }}
@@ -77,10 +98,9 @@ const ClassOne: React.FC = () => {
       {topics.map((topic, index) => (
         <Card 
           key={index} 
-          className="mb-4 w-full" 
-          isPressable 
-          isHoverable
-          onPress={() => navigate(topic.path)} // Dynamically navigate based on the topic's path
+          className="mb-4 w-full cursor-pointer hover:shadow-lg transition-shadow duration-300" 
+          isPressable
+          onPress={() => navigate(topic.path)}
         >
           <CardBody>
             <div className="flex items-center mb-2">
@@ -94,15 +114,20 @@ const ClassOne: React.FC = () => {
                     value={topic.progress} 
                     className="max-w-md flex-grow" 
                     color="primary"
+                    size="sm"
                   />
-                  <span className="ml-2 whitespace-nowrap">{topic.progress}% Completed</span>
+                  <span className="ml-2 text-sm whitespace-nowrap">{topic.progress}% Completed</span>
                 </div>
               </div>
-              <Chip color={topic.completed ? "success" : "warning"} variant="flat" className="ml-2">
-                {topic.completed ? "Completed" : "Not Started"}
+              <Chip 
+                color={topic.completed ? "success" : "warning"} 
+                variant="flat" 
+                className="ml-2"
+              >
+                {topic.completed ? "Completed" : "In Progress"}
               </Chip>
             </div>
-            <ul className="list-disc pl-12">
+            <ul className="list-disc pl-12 mt-2 text-sm text-gray-600">
               {topic.details.map((detail, detailIndex) => (
                 <li key={detailIndex}>{detail}</li>
               ))}
@@ -112,7 +137,7 @@ const ClassOne: React.FC = () => {
       ))}
       
       <footer className="mt-8 text-center text-sm text-gray-500">
-        © 2024 Maths
+        © 2024 Maths Learning Platform
       </footer>
     </motion.div>
   );
