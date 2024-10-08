@@ -97,3 +97,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Makes sure the content is vertically centered */
+}
+
+.clerk-sign-in,
+.clerk-sign-up {
+  width: 400px; /* Set a max width for better appearance */
+  margin: auto; /* Center horizontally */
+}

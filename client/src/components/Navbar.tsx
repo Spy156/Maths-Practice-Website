@@ -4,15 +4,17 @@ import {
   NavbarContent,
   NavbarItem,
   Link,
-  DropdownItem,
-  DropdownTrigger,
   Dropdown,
+  DropdownTrigger,
   DropdownMenu,
-  Avatar,
+  DropdownItem,
 } from "@nextui-org/react";
+import { UserButton, useUser } from "@clerk/clerk-react";
 import { AcmeLogo } from "./AcmeLogo.jsx";
 
 export default function CustomNavbar() {
+  const { isSignedIn, user } = useUser();
+
   return (
     <Navbar
       maxWidth="full"
@@ -21,7 +23,7 @@ export default function CustomNavbar() {
     >
       <NavbarBrand className="flex items-center">
         <AcmeLogo />
-        <p className="font-bold text-inherit text-xl mt-4 text-primary">Maths Practice</p>
+        <p className="font-bold text-inherit text-xl mt-4">Maths Practice</p>
       </NavbarBrand>
 
       <div>
@@ -39,38 +41,32 @@ export default function CustomNavbar() {
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link color="foreground" href="/about">
+            <Link color="foreground" href="/progress">
               Progress
             </Link>
           </NavbarItem>
-          <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-              <Avatar
-                isBordered
-                as="button"
-                className="transition-transform border-r-full"
-                color="secondary"
-                name="Jason Hughes"
-                size="sm"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-              />
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Profile Actions" variant="flat" className="p-4">
-              <DropdownItem key="profile" className="h-14 gap-2">
-                <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold">zoey@example.com</p>
-              </DropdownItem>
-              <DropdownItem key="settings">My Settings</DropdownItem>
-              <DropdownItem key="team_settings">Team Settings</DropdownItem>
-              <DropdownItem key="analytics">Analytics</DropdownItem>
-              <DropdownItem key="system">System</DropdownItem>
-              <DropdownItem key="configurations">Configurations</DropdownItem>
-              <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-              <DropdownItem key="logout" color="danger">
-                Log Out
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+          {isSignedIn ? (
+            <Dropdown placement="bottom-end">
+              <DropdownTrigger>
+                <UserButton afterSignOutUrl="/" />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Profile Actions" variant="flat" className="p-4">
+                <DropdownItem key="profile" className="h-14 gap-2">
+                  <p className="font-semibold">Signed in as</p>
+                  <p className="font-semibold">{user.primaryEmailAddress?.emailAddress}</p>
+                </DropdownItem>
+                <DropdownItem key="settings">My Settings</DropdownItem>
+                <DropdownItem key="analytics">Analytics</DropdownItem>
+                <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          ) : (
+            <NavbarItem>
+              <Link href="/sign-in" color="primary">
+                Sign In
+              </Link>
+            </NavbarItem>
+          )}
         </NavbarContent>
       </div>
     </Navbar>
