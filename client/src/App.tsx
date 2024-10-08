@@ -57,12 +57,8 @@ function App() {
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          <div className='items-center justify-center'>
             <Route path="/sign-in" element={<SignIn routing="path" path="/sign-in" />} />
-          </div>
-          <div className='items-center justify-center'>
             <Route path="/sign-up" element={<SignUp routing="path" path="/sign-up" />} />
-          </div>
 
           <Route path="/" element={<Layout />}>
             <Route index element={<ProtectedRoute><Home /></ProtectedRoute>} />
