@@ -102,11 +102,42 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Makes sure the content is vertically centered */
+  height: 100vh; 
 }
 
 .clerk-sign-in,
 .clerk-sign-up {
-  width: 400px; /* Set a max width for better appearance */
-  margin: auto; /* Center horizontally */
+  width: 400px; 
+  margin: auto;
+}
+
+
+body {
+  overflow: auto; 
+}
+
+body::-webkit-scrollbar {
+  width: 0; 
+  background: transparent; 
+}
+
+body {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+}
+
+
+.scrollable-container {
+  overflow-y: scroll; 
+  height: 100vh; 
+}
+
+.scrollable-container::-webkit-scrollbar {
+  width: 0; 
+  background: transparent; 
+}
+
+.scrollable-container {
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
 }

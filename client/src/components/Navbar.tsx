@@ -35,8 +35,8 @@ export default function CustomNavbar() {
               Home
             </Link>
           </NavbarItem>
-          <NavbarItem isActive>
-            <Link href="/practice" aria-current="page" color="primary">
+          <NavbarItem>
+            <Link href="/practice" color="foreground">
               Practice
             </Link>
           </NavbarItem>

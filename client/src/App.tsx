@@ -1,7 +1,7 @@
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { lazy, Suspense, ReactNode, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import { SignIn, SignUp, useUser } from '@clerk/clerk-react';
-import CustomNavbar from './components/Navbar';
+import Layout from './components/Layout';
 
 // lazy-loaded components
 const Home = lazy(() => import('./pages/Home'));
@@ -41,125 +41,62 @@ const PlaceValue = lazy(() => import('./pages/Practice/Class/ClassTwo/PlaceValue
 const IntroductionToTime = lazy(() => import('./pages/Practice/Class/ClassTwo/IntroductionToTime'));
 const MoneyAndCountingCoins = lazy(() => import('./pages/Practice/Class/ClassTwo/MoneyAndCountingCoins'));
 
-// Protected Layout
-type ProtectedLayoutProps = {
-  children: ReactNode;
-};
+import { ReactNode } from 'react';
 
-function ProtectedLayout({ children }: ProtectedLayoutProps): JSX.Element {
+function ProtectedRoute({ children }: { children: ReactNode }) {
   const { isSignedIn, isLoaded } = useUser();
 
-  if (!isLoaded) return <div>Loading...</div>; // Wait until user state is loaded
-  if (!isSignedIn) return <SignIn />; // Show SignIn if user is not signed in
+  if (!isLoaded) return <div>Loading...</div>;
+  if (!isSignedIn) return <Navigate to="/sign-in" replace />;
 
-  return (
-    <div>
-      <CustomNavbar />
-      <div className="pt-16">{children}</div>
-    </div>
-  );
-}
-
-// Redirect after successful sign-in/sign-up
-function SignInPage() {
-  const { isSignedIn } = useUser();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isSignedIn) {
-      // Redirect to the homepage or other page after signing in
-      navigate('/');
-    }
-  }, [isSignedIn, navigate]);
-
-  return (
-    <div className="centered">
-      <SignIn routing="path" path="/sign-in" />
-    </div>
-  );
-}
-
-function SignUpPage() {
-  const { isSignedIn } = useUser();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isSignedIn) {
-      // Redirect to the homepage or other page after signing up
-      navigate('/');
-    }
-  }, [isSignedIn, navigate]);
-
-  return (
-    <div className="centered">
-      <SignUp routing="path" path="/sign-up" />
-    </div>
-  );
-}
-
-// Main Layout
-function Layout() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Routes>
-        {/* Public routes */}
-        <Route path="/sign-in/*" element={<SignInPage />} />
-        <Route path="/sign-up/*" element={<SignUpPage />} />
-        <Route path="*" element={<NotFound />} />
-
-        {/* Protected routes */}
-        <Route
-          element={
-            <ProtectedLayout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<Progress />} />
-                <Route path="/practice" element={<Practice />} />
-                <Route path="/user/:id" element={<UserProfile />} />
-
-                {/* Class routes */}
-                <Route path="/Class/ClassOne" element={<ClassOne />} />
-                <Route path="/Class/ClassTwo" element={<ClassTwo />} />
-                <Route path="/Class/ClassThree" element={<ClassThree />} />
-                <Route path="/Class/ClassFour" element={<ClassFour />} />
-                <Route path="/Class/ClassFive" element={<ClassFive />} />
-
-                {/* Topic routes */}
-                <Route path="/Topic/Addition" element={<Addition />} />
-                <Route path="/Topic/Subtraction" element={<Subtraction />} />
-                <Route path="/Topic/Multiplication" element={<Multiplication />} />
-                <Route path="/Topic/Divison" element={<Division />} />
-                <Route path="/Topic/SquareRoots" element={<SquareRoots />} />
-                <Route path="/Topic/CubeRoots" element={<CubeRoots />} />
-                <Route path="/Topic/Squaring" element={<Squaring />} />
-                <Route path="/Topic/Cubing" element={<Cubing />} />
-
-                {/* ClassOne topic routes */}
-                <Route path="/Class/ClassOne/CountingAndNumbers" element={<CountingAndNumbers />} />
-                <Route path="/Class/ClassOne/BasicAddition" element={<BasicAddition />} />
-                <Route path="/Class/ClassOne/BasicSubtraction" element={<BasicSubtraction />} />
-                <Route path="/Class/ClassOne/ShapesAndPatterns" element={<ShapesAndPatterns />} />
-                <Route path="/Class/ClassOne/ComparingNumbers" element={<ComparingNumbers />} />
-
-                {/* ClassTwo topic routes */}
-                <Route path="/Class/ClassTwo/AdvancedAddition" element={<AdvancedAddition />} />
-                <Route path="/Class/ClassTwo/AdvancedSubtraction" element={<AdvancedSubtraction />} />
-                <Route path="/Class/ClassTwo/PlaceValue" element={<PlaceValue />} />
-                <Route path="/Class/ClassTwo/IntroductionToTime" element={<IntroductionToTime />} />
-                <Route path="/Class/ClassTwo/MoneyAndCountingCoins" element={<MoneyAndCountingCoins />} />
-              </Routes>
-            </ProtectedLayout>
-          }
-        />
-      </Routes>
-    </Suspense>
-  );
+  return children;
 }
 
 function App() {
   return (
     <Router>
-      <Layout />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/sign-in" element={<SignIn routing="path" path="/sign-in" />} />
+          <Route path="/sign-up" element={<SignUp routing="path" path="/sign-up" />} />
+
+          <Route path="/" element={<Layout />}>
+            <Route index element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route path="home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route path="practice" element={<ProtectedRoute><Practice /></ProtectedRoute>} />
+            <Route path="progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
+            <Route path="user/:id" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+
+            <Route path="/Class/ClassOne" element={<ClassOne />} />
+            <Route path="/Class/ClassTwo" element={<ClassTwo />} />
+            <Route path="/Class/ClassThree" element={<ClassThree />} />
+            <Route path="/Class/ClassFour" element={<ClassFour />} />
+            <Route path="/Class/ClassFive" element={<ClassFive />} />
+
+            <Route path="/Topic/Addition" element={<Addition />} />
+            <Route path="/Topic/Subtraction" element={<Subtraction />} />
+            <Route path="/Topic/Multiplication" element={<Multiplication />} />
+            <Route path="/Topic/Divison" element={<Division />} />
+            <Route path="/Topic/SquareRoots" element={<SquareRoots />} />
+            <Route path="/Topic/CubeRoots" element={<CubeRoots />} />
+            <Route path="/Topic/Squaring" element={<Squaring />} />
+            <Route path="/Topic/Cubing" element={<Cubing />} />
+
+            <Route path="/Class/ClassOne/CountingAndNumbers" element={<CountingAndNumbers />} />
+            <Route path="/Class/ClassOne/BasicAddition" element={<BasicAddition />} />
+            <Route path="/Class/ClassOne/BasicSubtraction" element={<BasicSubtraction />} />
+            <Route path="/Class/ClassOne/ShapesAndPatterns" element={<ShapesAndPatterns />} />
+            <Route path="/Class/ClassOne/ComparingNumbers" element={<ComparingNumbers />} />
+
+            <Route path="/Class/ClassTwo/AdvancedAddition" element={<AdvancedAddition />} />
+            <Route path="/Class/ClassTwo/AdvancedSubtraction" element={<AdvancedSubtraction />} />
+            <Route path="/Class/ClassTwo/PlaceValue" element={<PlaceValue />} />
+            <Route path="/Class/ClassTwo/IntroductionToTime" element={<IntroductionToTime />} />
+            <Route path="/Class/ClassTwo/MoneyAndCountingCoins" element={<MoneyAndCountingCoins />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }
