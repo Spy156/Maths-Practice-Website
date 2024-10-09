@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardBody, Input, Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 import { Search, ArrowUpDown } from 'lucide-react';
 
-const classProgress = [
-  { name: 'Class I Maths', progress: 40, icon: '✖' },
+interface ClassProgress {
+  name: string;
+  progress: number;
+  icon: string;
+}
+
+const initialClassProgress: ClassProgress[] = [
+  { name: 'Class I Maths', progress: 0, icon: '✖' },
   { name: 'Class II Maths', progress: 60, icon: '◎' },
   { name: 'Class III Maths', progress: 50, icon: '✂' },
   { name: 'Class IV Maths', progress: 50, icon: '🖋' },
-  { name: 'Class IV Maths', progress: 40, icon: '📐' },
+  { name: 'Class V Maths', progress: 40, icon: '📐' },
 ];
 
 const topicProgress = [
@@ -19,6 +25,21 @@ const topicProgress = [
 ];
 
 const ProgressOverview: React.FC = () => {
+  const [classProgress, setClassProgress] = useState<ClassProgress[]>(initialClassProgress);
+
+  useEffect(() => {
+    const classOneProgress = JSON.parse(localStorage.getItem('classOneProgress') || '{}');
+    const classOneAverageProgress = classOneProgress.averageProgress || 0;
+
+    setClassProgress(prevProgress => 
+      prevProgress.map(item => 
+        item.name === 'Class I Maths' 
+          ? { ...item, progress: classOneAverageProgress } 
+          : item
+      )
+    );
+  }, []);
+
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-semibold mb-2 text-purple-600">Progress Overview</h1>
@@ -33,7 +54,7 @@ const ProgressOverview: React.FC = () => {
                 <span className="text-xl font-medium">{item.name}</span>
               </div>
               <p className="text-lg font-bold items-center justify-between ml-11 mt-2" style={{color: `hsl(${item.progress}, 70%, 50%)`}}>
-                {item.progress}% Complete
+                {item.progress.toFixed(2)}% Complete
               </p>
             </CardBody>
           </Card>

@@ -13,6 +13,11 @@ interface Topic {
   path: string;
 }
 
+interface ClassProgress {
+  averageProgress: number;
+  topics: Topic[];
+}
+
 const initialTopics: Topic[] = [
   { 
     icon: <BookOpen className="w-6 h-6" />,
@@ -73,7 +78,10 @@ const initialTopics: Topic[] = [
 
 const ClassOne: React.FC = () => {
   const navigate = useNavigate();
-  const [topics, setTopics] = useState<Topic[]>(initialTopics);
+  const [classProgress, setClassProgress] = useState<ClassProgress>({
+    averageProgress: 0,
+    topics: initialTopics
+  });
 
   useEffect(() => {
     const storedTopics = JSON.parse(localStorage.getItem('classOneTopics') || '{}');
@@ -82,7 +90,19 @@ const ClassOne: React.FC = () => {
       progress: storedTopics[topic.title] || topic.progress,
       completed: (storedTopics[topic.title] || 0) === 100
     }));
-    setTopics(updatedTopics);
+
+    const totalProgress = updatedTopics.reduce((sum, topic) => sum + topic.progress, 0);
+    const averageProgress = totalProgress / updatedTopics.length;
+
+    const newClassProgress = {
+      averageProgress: Number(averageProgress.toFixed(2)),
+      topics: updatedTopics
+    };
+
+    setClassProgress(newClassProgress);
+
+    // Store the entire ClassProgress object in localStorage
+    localStorage.setItem('classOneProgress', JSON.stringify(newClassProgress));
   }, []);
 
   return (
@@ -95,7 +115,18 @@ const ClassOne: React.FC = () => {
       <h1 className="text-2xl font-bold mb-4">Class I Maths</h1>
       <h2 className="text-xl mb-6">Introduction to Basic Math Skills</h2>
       
-      {topics.map((topic, index) => (
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-2">Overall Progress</h3>
+        <Progress 
+          value={classProgress.averageProgress} 
+          className="max-w-md" 
+          color="success"
+          size="md"
+        />
+        <p className="mt-2">Average Progress: {classProgress.averageProgress}%</p>
+      </div>
+      
+      {classProgress.topics.map((topic, index) => (
         <Card 
           key={index} 
           className="mb-4 w-full cursor-pointer hover:shadow-lg transition-shadow duration-300" 
