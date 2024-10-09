@@ -19,11 +19,11 @@ export default function CustomNavbar() {
     <Navbar
       maxWidth="full"
       isBlurred
-      className="fixed top-0 h-14 bg-transparent flex justify-between items-center"
+      className="fixed top-0 p-2 isBordered bg-white flex justify-between items-center border-b-2 border-x-zinc-100"
     >
       <NavbarBrand className="flex items-center">
         <AcmeLogo />
-        <p className="font-bold text-inherit text-xl mt-4">Maths Practice</p>
+        <p className="font-bold text-inherit text-xl mt-4 text-zinc-800">Maths Practice</p>
       </NavbarBrand>
 
       <div>
